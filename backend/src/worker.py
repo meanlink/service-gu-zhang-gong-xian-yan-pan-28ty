@@ -6,7 +6,7 @@ from src.config.database import Session
 from src.config.settings import REDIS_URL
 from src.models import Job, Dataset, Report
 from src.services.business import analyze
-from src.services.reports import deliver
+from src.services import archives
 from src.services.audit import record
 logging.basicConfig(level=logging.INFO)
 def execute(job_id):
@@ -26,21 +26,39 @@ def execute(job_id):
             record(db,'worker','job.failed',{'id':j.id,'error':j.error})
         db.commit()
 def tick():
+    # 先重试排队中的归档（同次操作重试不重复占用或释放容量）
+    archives.retry_queued(actor='worker')
     with Session() as db:
-        queued=list(db.scalars(select(Job.id).where(Job.status=='queued').limit(3)))
-    for job_id in queued:execute(job_id)
-    with Session() as db:
-        for r in db.scalars(select(Report).where(Report.enabled==True,Report.next_run<=time.time())):
-            d=deliver(db,r)
-            if d:record(db,'worker','report.delivered',{'id':r.id,'delivery':d.id})
+        due=list(db.scalars(select(Report).where(Report.enabled==True,Report.next_run<=time.time())))
+        for r in due:
+            j=db.get(Job,r.job_id)
+            if not j or not j.approved:
+                r.next_run=time.time()+r.interval_seconds
+                record(db,'worker','report.skipped',{'id':r.id,'reason':'关联结果未批准'})
+                continue
+            # 先登记并提交，再在独立事务写入：写入中断后可按记录恢复续传
+            d=archives.create_delivery(db,r)
+            r.next_run=time.time()+r.interval_seconds
+            delivery_id=d.id
+            record(db,'worker','report.scheduled',{'id':r.id,'delivery':delivery_id})
+            db.commit()
+            result=archives.run_delivery(delivery_id,actor='worker')
+            if result is not None:
+                with Session() as log_db:
+                    record(log_db,'worker','report.delivered',
+                           {'id':r.id,'delivery':delivery_id,'status':result.status})
+                    log_db.commit()
         db.commit()
 def main():
     r=Redis.from_url(REDIS_URL,socket_timeout=3)
-    # This Compose stack has a single worker. A crash must not strand its jobs.
+    # 单 worker；崩溃不得遗留 running 任务或写入/回收中间态
     with Session() as db:
         for j in db.scalars(select(Job).where(Job.status=='running')):
             j.status='queued';record(db,'worker','job.recovered',{'id':j.id})
         db.commit()
+    recovered=archives.recover_interrupted(actor='worker')
+    for phase,delivery_id,extra in recovered:
+        logging.info('Recovered delivery %s phase=%s extra=%s',delivery_id,phase,extra)
     while True:
         Path('/tmp/heartbeat').touch()
         try:

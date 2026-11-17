@@ -3,3 +3,28 @@ body[data-style*=lab]{--paper:oklch(96% .012 140);--surface:oklch(98% .008 140);
 @media(min-width:1600px){main{padding:45px 65px}.shell{grid-template-columns:270px minmax(0,1fr)}}
 @media(max-width:1100px){.shell{grid-template-columns:206px minmax(0,1fr)}aside{padding:25px 18px}header{padding:0 25px}main{padding:26px 25px}footer{margin:0 25px}.brand{font-size:17px}.overview-hero{gap:20px;padding:24px}.numbers{padding-left:18px;gap:18px}.two-columns{gap:25px}.result-selector{flex-wrap:wrap}.dataset-grid,.report-grid{gap:25px;grid-template-columns:1fr 1.4fr}.workbench-grid{gap:25px}.login-story{padding:45px}.login-form{padding:40px}.timeline li{display:block}.timeline span{display:block;margin-top:5px}}
 @media(max-width:767px){.shell{display:block}aside{position:static;min-height:0;height:auto;padding:20px}.brand{flex-direction:row;align-items:center;font-size:18px}.brand-symbol{width:30px;height:30px}.edition,.aside-note,.account{display:none}nav{flex-direction:row;overflow:auto;margin-top:18px;gap:3px}nav a{padding:10px;white-space:nowrap;font-size:11px}nav a small{display:none}header{height:42px;padding:0 20px}header>span:first-child{max-width:65%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}header .live-dot{font-size:9px}main{padding:24px 20px}.page-heading{display:block}.page-heading>.button{margin-top:15px}.overview-hero{grid-template-columns:1fr;padding:20px}.numbers{border-left:0;border-top:1px solid var(--line);padding:18px 0 0;grid-template-columns:repeat(4,1fr);gap:10px}.numbers strong{font-size:25px}.numbers span{font-size:9px}.two-columns,.dataset-grid,.workbench-grid,.report-grid{grid-template-columns:1fr;gap:20px}.section-title span{max-width:55%}.metrics{gap:20px}.metrics strong{font-size:23px}.result-selector>span{font-size:10px}.result-lead h2{font-size:21px}.method-sheet{padding:22px}.login-scene{display:block}.login-story{padding:70px 30px 30px}.login-story>.edition{top:25px}.login-story h1{font-size:40px}.flow-lines{display:none}.login-foot{margin-top:20px}.login-form{padding:35px 30px;max-width:none}.login-form h2{font-size:28px}footer{margin:0 20px;font-size:8px}.delivery{align-items:flex-start;flex-direction:column}body[data-style*=press] .overview-hero{grid-template-columns:1fr}body[data-style*=press] .narrative{order:0}body[data-style*=press] .numbers{border-right:0;padding:18px 0 0}}
+.capacity{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;border:1px solid var(--line);background:var(--surface);padding:18px;margin-bottom:18px}
+.capacity>div{display:flex;flex-direction:column;gap:6px}
+.capacity span{font-size:10px;color:var(--muted);letter-spacing:.08em}
+.capacity strong{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:500}
+.capacity strong.over{color:oklch(47% .15 30)}
+.status-counts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.status-counts span{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:6px 10px}
+.status-counts b{color:var(--ink)}
+.report-grid.secondary{margin-top:8px}
+.delivery{position:relative}
+.delivery.status-queued{border-left:3px solid oklch(68% .12 75);padding-left:14px}
+.delivery.status-rejected{border-left:3px solid oklch(47% .15 30);padding-left:14px}
+.delivery.status-reclaimed{opacity:.62}
+.delivery.is-retained{border-left:3px solid var(--accent);padding-left:14px}
+.delivery .queue-note{margin:8px 0 0;font-size:11px;color:oklch(45% .13 40);line-height:1.7;max-width:520px}
+.delivery-actions{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+.reclaim-list{display:flex;flex-direction:column}
+.reclaim-row{display:flex;justify-content:space-between;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)}
+.reclaim-row strong{font-size:13px;font-weight:500}
+.reclaim-row p{margin:6px 0 4px;font-size:11px;color:var(--muted)}
+.reclaim-row small{font-size:10px;color:var(--muted);display:block;max-width:620px;line-height:1.7}
+.reclaim-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;white-space:nowrap}
+.reclaim-meta strong{font-family:'Noto Serif SC',serif;font-size:16px}
+.reclaim-meta span{font-size:10px;color:var(--muted)}
+@media(max-width:1100px){.capacity{grid-template-columns:repeat(2,1fr)}}

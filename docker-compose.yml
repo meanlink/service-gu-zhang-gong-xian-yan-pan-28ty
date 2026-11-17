@@ -33,6 +33,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-incident-links-development-only}
       SEED_DEMO: ${SEED_DEMO:-true}
       ARTIFACT_DIR: /artifacts
+      ARCHIVE_DEFAULT_LIMIT_BYTES: ${ARCHIVE_DEFAULT_LIMIT_BYTES:-10485760}
     ports: ["${BACKEND_PORT:-19212}:8000"]
     volumes: ["analysis-artifacts:/artifacts"]
     depends_on:
